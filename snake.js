@@ -10,6 +10,8 @@ var snakeY = blockSize * 5;
 var velocityX = 0;
 var velocityY = 0;
 
+var snakeBody = [];
+
 var foodX = blockSize * 10;
 var foodY = blockSize * 10;
 
@@ -22,7 +24,7 @@ window.onload = function () {
     // No parentheses when passing function as a parameter!!!
     placeFood();
     document.addEventListener('keyup', changeDirection);
-    setInterval(update, 1000 / 10)
+    setInterval(update, 1000 / 7)
 }
 
 function update() {
@@ -33,7 +35,16 @@ function update() {
     context.fillRect(foodX, foodY, blockSize, blockSize);
 
     if (snakeX == foodX && snakeY == foodY) {
+        snakeBody.push([foodX, foodY]);
         placeFood();
+    }
+
+    for (let i = snakeBody.length - 1; i > 0; i--) {
+        snakeBody[i] = snakeBody[i - 1];
+    }
+
+    if (snakeBody.length) {
+        snakeBody[0] = [snakeX, snakeY];
     }
 
     context.fillStyle = '#A1B57D';
@@ -41,7 +52,9 @@ function update() {
     snakeY += velocityY * blockSize;
     context.fillRect(snakeX, snakeY, blockSize, blockSize);
 
-
+    for (let i = 0; i < snakeBody.length; i++) {
+        context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+    }
 }
 
 function changeDirection(e) {
